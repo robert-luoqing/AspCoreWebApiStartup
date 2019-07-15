@@ -1,4 +1,8 @@
 ﻿using SuperPartner.Biz.Common;
+using SuperPartner.DataLayer.Organization;
+using SuperPartner.Model.Common;
+using SuperPartner.Model.Organization.User;
+using SuperPartner.Utils.Cryptography;
 using SuperPartner.Utils.Redis;
 using System;
 using System.Collections.Generic;
@@ -8,19 +12,54 @@ namespace SuperPartner.Biz.Organization
 {
     public class UserManager : ManagerBase
     {
-        private CommonRedisHelper commonRedisHelper;
-        public UserManager(CommonRedisHelper commonRedisHelper)
+        private UserDao userDao;
+        public UserManager(BizContext bizContext, UserDao userDao) : base(bizContext)
         {
-            this.commonRedisHelper = commonRedisHelper;
+            this.userDao = userDao;
         }
 
-        public List<string> GetUserList()
+        /// <summary>
+        /// Get user information
+        /// </summary>
+        /// <param name="keyword">The keyword which use to search user name or login name</param>
+        /// <param name="pager">pager object</param>
+        /// <returns>Return matched user infomation</returns>
+        public List<WsUserInfo> GetUserList(string keyword, WsPager pager)
         {
-            this.commonRedisHelper.Set("Test", "12243");
-            return new List<string>()
-            {
-                "test1", "test2"
-            };
+            var result = this.userDao.GetUserList(keyword, pager);
+            return result;
+        }
+
+        /// <summary>
+        /// Get user count which matched search condition
+        /// </summary>
+        /// <param name="keyword">The keyword which use to search user name or login name</param>
+        /// <returns>return matched user count</returns>
+        public int GetUserCount(string keyword)
+        {
+            var result = this.userDao.GetUserCount(keyword);
+            return result;
+        }
+
+        /// <summary>
+        /// Add user
+        /// </summary>
+        /// <param name="user">User object</param>
+        public void AddUser(WsUserDetail user)
+        {
+            user.PwdExpredDate = DateTime.Now.AddDays(this.BizContext.Configuration.PwdExpiredInterval);
+            // Encode password to md5
+            user.Password = MD5Helper.ToMD5(user.Password);
+            this.userDao.AddUser(user);
+        }
+
+        /// <summary>
+        /// Update user
+        /// </summary>
+        /// <param name="user">User object</param>
+        public void UpdateUser(WsUserDetail user)
+        {
+            this.userDao.UpdateUser(user);
         }
     }
 }

@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>SuperPartner</name>
+    </assembly>
+    <members>
+        <member name="M:SuperPartner.Controllers.UserController.GetUserList(SuperPartner.Model.Common.WsListRequest{System.String})">
+            <summary>
+            Search user by keyword
+            </summary>
+            <param name="req">The conditio property is keyword which use to search User Name or Login Name</param>
+            <returns>Matched user information</returns>
+        </member>
+        <member name="M:SuperPartner.Controllers.UserController.GetUserCount(SuperPartner.Model.Common.WsListRequest{System.String})">
+            <summary>
+            Get user count by keyword
+            </summary>
+            <param name="req">The conditio property is keyword which use to search User Name or Login Name</param>
+            <returns>matched user count</returns>
+        </member>
+        <member name="M:SuperPartner.Controllers.UserController.AddUser(SuperPartner.Model.Organization.User.WsUserDetail)">
+            <summary>
+            Add user
+            </summary>
+            <param name="user">user information</param>
+            <returns>Return success status if success</returns>
+        </member>
+        <member name="M:SuperPartner.Controllers.UserController.UpdateUser(SuperPartner.Model.Organization.User.WsUserDetail)">
+            <summary>
+            Update user
+            </summary>
+            <param name="user">user information</param>
+            <returns>Return success status if success</returns>
+        </member>
+        <member name="T:SuperPartner.Filters.SpExceptionFilter">
+            <summary>
+            Author: Robert
+            The class is used to intercept exception include business exception and system exception 
+            golbal handle the exception and output to client. 
+            It also log the exception to difference level. It can use analyze what issue occur in app.
+            </summary>
+        </member>
+    </members>
+</doc>

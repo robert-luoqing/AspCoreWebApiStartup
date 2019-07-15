@@ -8,16 +8,19 @@ using System.Threading.Tasks;
 
 namespace SuperPartner.Filters
 {
+    /// <summary>
+    /// The authorization filter
+    /// It used to verify login or non-login API, and initial token, token's data
+    /// </summary>
     public class SpAuthFilter : IAuthorizationFilter
     {
         
         public void OnAuthorization(AuthorizationFilterContext context)
         {
             var tokenHandler = context.HttpContext.RequestServices.GetService(typeof(ITokenHandler)) as ITokenHandler;
-            var spContext = context.HttpContext.RequestServices.GetService(typeof(SpContext)) as SpContext;
+            var spContext = context.HttpContext.RequestServices.GetService(typeof(BizContext)) as BizContext;
             spContext.TokenHandler = tokenHandler;
             spContext.Token = Guid.NewGuid().ToString();
-            
         }
     }
 }

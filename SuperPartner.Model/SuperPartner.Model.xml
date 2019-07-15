@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>SuperPartner.Model</name>
+    </assembly>
+    <members>
+        <member name="P:SuperPartner.Model.Common.SpConfiguration.PwdExpiredInterval">
+            <summary>
+            密码过期时间间隔
+            </summary>
+        </member>
+        <member name="T:SuperPartner.Model.Common.WsPager">
+            <summary>
+            Pager parameter for request
+            CurrentPage is based 1
+            </summary>
+        </member>
+        <member name="P:SuperPartner.Model.Common.WsPager.CurrentPage">
+            <summary>
+            The current page which client request. It start from 1
+            </summary>
+        </member>
+        <member name="P:SuperPartner.Model.Common.WsPager.ItemsPerPage">
+            <summary>
+            Recond count per page
+            </summary>
+        </member>
+        <member name="T:SuperPartner.Model.Common.WsResponse">
+            <summary>
+            Author: Robert
+            The response base class
+            All response class will be use the class as base class
+            </summary>
+        </member>
+        <member name="P:SuperPartner.Model.Common.WsResponse.Trans">
+            <summary>
+            Response trans object
+            </summary>
+        </member>
+        <member name="T:SuperPartner.Model.Common.WsResponse`1">
+            <summary>
+            The response class which include data
+            </summary>
+            <typeparam name="T">The response data type</typeparam>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:SuperPartner.Model.Common.WsResponse`1.op_Implicit(`0)~SuperPartner.Model.Common.WsResponse{`0}" -->
+        <member name="T:SuperPartner.Model.Common.WsTrans">
+            <summary>
+            Auth: Robert
+            Trans object, It indicate the operation status
+            </summary>
+        </member>
+        <member name="P:SuperPartner.Model.Common.WsTrans.ErrorCode">
+            <summary>
+            The operation is successful if Error Code is null or zero
+            </summary>
+        </member>
+        <member name="P:SuperPartner.Model.Common.WsTrans.ErrorMsg">
+            <summary>
+            If there is exception exist, the field is the error message
+            </summary>
+        </member>
+        <member name="T:SuperPartner.Model.Exception.SpException">
+            <summary>
+            Author: Robert
+            Business Exception. The default error code is 8888 if no error code setted
+            Notice: Business Exception is used to notice what error occur. It is predictable.
+            </summary>
+        </member>
+    </members>
+</doc>
