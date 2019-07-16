@@ -8,7 +8,8 @@ The project aids with developer who quickly create new project for web api purpo
 - Web api sample wihch run in project
 
 # Token handler
-There are two token handler in the framework
+I don't like use session in web api, so it should use token or jwt to handle. Current we just provide token handler
+  There are two token handler in the framework
 - Token save in memory
 - Token save in redis
 You can switch the token process in Startup.cs file
@@ -38,3 +39,7 @@ After that, you can inject "ITokenHandler" or inject "BizContext" to use TokenHa
         return token;
     }
 ```
+
+TODO:
+- jwt support
+- function permission support
