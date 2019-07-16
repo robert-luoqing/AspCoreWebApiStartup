@@ -1,5 +1,5 @@
 # Asp Core web api startup project
-The project aids developer who quickly create new project for web api purpose. it includes three layers which is UI/Biz/Dao.
+The project aids with developer who quickly create new project for web api purpose. it includes three layers which is UI/Biz/Dao.
 
 # The project includes
 - Global exception handling
