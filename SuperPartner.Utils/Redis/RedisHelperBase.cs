@@ -156,6 +156,14 @@ namespace SuperPartner.Utils.Redis
             return this.Redis.GetDatabase().StringGet(key);
         }
 
+        public int GetExpireTime(string key)
+        {
+            key = this.GetFinalRedisKey(key);
+            var time = this.Redis.GetDatabase().StringGetWithExpiry(key);
+            var seconds = time.Expiry == null ? 0 : time.Expiry.Value.TotalSeconds;
+            return Convert.ToInt32(seconds);
+        }
+
         public string GetItemFromList(string key, int listIndex)
         {
             key = this.GetFinalRedisKey(key);
