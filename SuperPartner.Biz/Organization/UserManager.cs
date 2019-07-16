@@ -22,8 +22,9 @@ namespace SuperPartner.Biz.Organization
         {
             // Verify user name and password
             // .....
-            var token = this.BizContext.TokenHandler.GeneToken(user);
-            return token;
+            // var token = this.BizContext.TokenHandler.GeneToken(user);
+            // return token;
+            return "";
         }
 
         /// <summary>

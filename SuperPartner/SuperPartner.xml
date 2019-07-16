@@ -32,6 +32,12 @@
             <param name="user">user information</param>
             <returns>Return success status if success</returns>
         </member>
+        <member name="T:SuperPartner.Filters.SpAuthFilter">
+            <summary>
+            The authorization filter
+            It used to verify login or non-login API, and initial token, token's data
+            </summary>
+        </member>
         <member name="T:SuperPartner.Filters.SpExceptionFilter">
             <summary>
             Author: Robert
