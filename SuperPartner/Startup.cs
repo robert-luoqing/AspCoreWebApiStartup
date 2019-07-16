@@ -56,12 +56,11 @@ namespace SuperPartner
 
             // Register component
             services.AddSingleton<CommonRedisHelper>(new CommonRedisHelper(settingModel.CommonRedis, settingModel.RedisPrefix));
-            services.AddSingleton<PermissionRedisHelper>(new PermissionRedisHelper(settingModel.PermissionRedis, settingModel.RedisPrefix));
 
             // Token handler, The default is save token and associate data in memoery.
             services.AddSingleton<ITokenHandler>(new MemoryTokenHandler());
             // You can use redis as token storage
-            //services.AddSingleton<ITokenHandler>(new RedisTokenHandler());
+            // services.AddSingleton<ITokenHandler>(new RedisTokenHandler(new PermissionRedisHelper(settingModel.PermissionRedis, settingModel.RedisPrefix), "token"));
 
             // It will initial in SpAuthFilter, It simplify the reference of request object
             // It includes token, associate object of token, token handler instance etc.

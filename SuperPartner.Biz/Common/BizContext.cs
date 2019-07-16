@@ -1,4 +1,5 @@
 ﻿using SuperPartner.Model.Common;
+using SuperPartner.Model.Organization.User;
 using SuperPartner.Permission.TokenHandler;
 using System;
 using System.Collections.Generic;
@@ -32,5 +33,9 @@ namespace SuperPartner.Biz.Common
         /// Token
         /// </summary>
         public string Token { get; set; }
+        /// <summary>
+        /// Current login user
+        /// </summary>
+        public LoginUser LoginUser { get; set; }
     }
 }

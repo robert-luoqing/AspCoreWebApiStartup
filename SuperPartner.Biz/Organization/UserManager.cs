@@ -18,6 +18,14 @@ namespace SuperPartner.Biz.Organization
             this.userDao = userDao;
         }
 
+        public string Login(string userName, string password)
+        {
+            // Verify user name and password
+            // .....
+            var token = this.BizContext.TokenHandler.GeneToken(user);
+            return token;
+        }
+
         /// <summary>
         /// Get user information
         /// </summary>

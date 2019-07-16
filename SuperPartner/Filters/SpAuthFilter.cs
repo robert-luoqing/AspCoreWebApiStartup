@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
 using SuperPartner.Biz.Common;
+using SuperPartner.Model.Organization.User;
 using SuperPartner.Permission.TokenHandler;
 using System;
 using System.Collections.Generic;
@@ -20,7 +21,13 @@ namespace SuperPartner.Filters
             var tokenHandler = context.HttpContext.RequestServices.GetService(typeof(ITokenHandler)) as ITokenHandler;
             var spContext = context.HttpContext.RequestServices.GetService(typeof(BizContext)) as BizContext;
             spContext.TokenHandler = tokenHandler;
-            spContext.Token = Guid.NewGuid().ToString();
+
+            var token = context.HttpContext.Request.Headers["token"];
+            spContext.Token = token;
+            if(!string.IsNullOrEmpty(token))
+            {
+                spContext.LoginUser = tokenHandler.GetAssociateObjectByToken<LoginUser>(token);
+            }
         }
     }
 }
