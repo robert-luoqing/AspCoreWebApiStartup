@@ -7,6 +7,27 @@ The project aids with developer who quickly create new project for web api purpo
 - Web api format agreement
 - Web api sample wihch run in project
 - Unit test support
+# Global exception handling
+The platform use log4net as logger.   
+SpExceptionFilter.cs class will log more detail information if the unhandling exception coming from business loginc.
+```c#
+// Log more information as detail as possible
+var request = context.HttpContext.Request;
+Logger.Fatal("Request url: " + request.Path);
+Logger.Fatal("Request Query String: " + request.QueryString.ToString());
+request.Body.Seek(0, SeekOrigin.Begin);
+using (var reader = new StreamReader(request.Body))
+{
+    var bodyContent = reader.ReadToEnd();
+    Logger.Fatal("Request body: " + bodyContent);
+}
+```
+We need follow the try catch rule
+- Dont't swallow any exception
+If any exception need be swallowed, please comment the detail information
+- Don't simple try catch to switch to SpException
+- Try-Catch-Log in all threading method
+We don't want the whole processing will die if there are some unhandling exception in thread. We just want get notice in fatal logs.
 
 # Token handler
 I don't like use session in web api, so it should use token or jwt to handle. Current we just provide token handler    
@@ -107,3 +128,5 @@ public void TestLoginWithNormalCorrectLogin()
 TODO:
 - jwt support
 - function permission support
+- add auth in swagger
+

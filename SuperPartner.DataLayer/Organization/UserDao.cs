@@ -7,6 +7,8 @@ using System.Linq;
 using SuperPartner.Model.Common;
 using SuperPartner.DataLayer.DataContext;
 using SuperPartner.Model.Enums;
+using Microsoft.EntityFrameworkCore;
+using SuperPartner.Model.Exception;
 
 namespace SuperPartner.DataLayer.Organization
 {
@@ -106,6 +108,8 @@ namespace SuperPartner.DataLayer.Organization
                 var dbEntity = new User();
                 dbEntity.UserId = user.UserId;
                 context.User.Attach(dbEntity);
+                if (context.Entry(dbEntity).State == EntityState.Added)
+                    throw new SpException("No record exist");
 
                 dbEntity.UserName = user.UserName;
                 dbEntity.LoginName = user.LoginName;
