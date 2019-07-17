@@ -70,7 +70,7 @@ namespace SuperPartner.Permission.TokenHandler
             {
                 // If the token didn't not expired. refresh the last access time
                 // else remove the token from tokens
-                if (tokenData.LastAccessTime.AddSeconds(this.timeout) < DateTime.Now)
+                if (tokenData.LastAccessTime.AddSeconds(this.timeout) >= DateTime.Now)
                 {
                     tokenData.LastAccessTime = DateTime.Now;
                 }
@@ -106,7 +106,7 @@ namespace SuperPartner.Permission.TokenHandler
             {
                 // If the token didn't not expired. refresh the last access time and associate data
                 // else remove the token from tokens
-                if (tokenData.LastAccessTime.AddSeconds(this.timeout) < DateTime.Now)
+                if (tokenData.LastAccessTime.AddSeconds(this.timeout) >= DateTime.Now)
                 {
                     tokenData.LastAccessTime = DateTime.Now;
                     tokenData.AssociateData = obj;
@@ -132,7 +132,7 @@ namespace SuperPartner.Permission.TokenHandler
             {
                 // If the token didn't not expired. refresh the last access time and associate data
                 // else remove the token from tokens
-                if (tokenData.LastAccessTime.AddSeconds(this.timeout) < DateTime.Now)
+                if (tokenData.LastAccessTime.AddSeconds(this.timeout) >= DateTime.Now)
                 {
                     if (tokenData.AssociateData != null)
                         result = (T)tokenData.AssociateData;

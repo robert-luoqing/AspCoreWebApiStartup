@@ -22,7 +22,7 @@ namespace SuperPartner.DataLayer.Organization
         /// <param name="keyword">The keyword which use to search user name or login name</param>
         /// <param name="pager">pager object</param>
         /// <returns>Return matched user infomation</returns>
-        public List<WsUserInfo> GetUserList(string keyword, WsPager pager)
+        public virtual List<WsUserInfo> GetUserList(string keyword, WsPager pager)
         {
             using (var context = this.DaoContext.GetDbContext())
             {
@@ -49,7 +49,7 @@ namespace SuperPartner.DataLayer.Organization
         /// </summary>
         /// <param name="keyword">The keyword which use to search user name or login name</param>
         /// <returns>return matched user count</returns>
-        public int GetUserCount(string keyword)
+        public virtual int GetUserCount(string keyword)
         {
             using (var context = this.DaoContext.GetDbContext())
             {
@@ -71,7 +71,7 @@ namespace SuperPartner.DataLayer.Organization
         /// </summary>
         /// <param name="user">User object</param>
         /// <returns>The new user id</returns>
-        public int AddUser(WsUserDetail user)
+        public virtual int AddUser(WsUserDetail user)
         {
             using (var context = this.DaoContext.GetDbContext())
             {
@@ -99,7 +99,7 @@ namespace SuperPartner.DataLayer.Organization
         /// Update user
         /// </summary>
         /// <param name="user">User object</param>
-        public void UpdateUser(WsUserDetail user)
+        public virtual void UpdateUser(WsUserDetail user)
         {
             using (var context = this.DaoContext.GetDbContext())
             {
@@ -120,7 +120,7 @@ namespace SuperPartner.DataLayer.Organization
         /// Delete user
         /// </summary>
         /// <param name="userId">The user id which need deleted</param>
-        public void DeleteUser(int userId)
+        public virtual void DeleteUser(int userId)
         {
             using (var context = this.DaoContext.GetDbContext())
             {
@@ -128,6 +128,47 @@ namespace SuperPartner.DataLayer.Organization
                 dbEntity.UserId = userId;
                 context.User.Attach(dbEntity);
                 context.User.Remove(dbEntity);
+                context.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// Get login user by login name
+        /// </summary>
+        /// <param name="loginName">Login name</param>
+        /// <returns>The data of login</returns>
+        public virtual List<LoginUser> GetLoginUserByLoginName(string loginName)
+        {
+            using (var context = this.DaoContext.GetDbContext())
+            {
+                var query = from o in context.User
+                            where o.LoginName == loginName
+                            select new LoginUser()
+                            {
+                                UserId = o.UserId,
+                                UserName = o.UserName,
+                                LoginName = o.LoginName,
+                                Password = o.Password,
+                                FailTimes = o.FailTimes
+                            };
+
+                return query.ToList();
+            }
+        }
+
+        /// <summary>
+        /// Increase fail times by user id
+        /// </summary>
+        /// <param name="userId">The user id</param>
+        /// <param name="failTime">Fail time which need to set</param>
+        public virtual void UpdateFailTimes(int userId, int failTime)
+        {
+            using (var context = this.DaoContext.GetDbContext())
+            {
+                var dbEntity = new User();
+                dbEntity.UserId = userId;
+                context.User.Attach(dbEntity);
+                dbEntity.FailTimes = failTime;
                 context.SaveChanges();
             }
         }

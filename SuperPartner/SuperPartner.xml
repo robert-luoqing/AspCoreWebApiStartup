@@ -32,6 +32,17 @@
             <param name="user">user information</param>
             <returns>Return success status if success</returns>
         </member>
+        <member name="M:SuperPartner.Controllers.UserController.Login(System.String,System.String)">
+            <summary>
+            Login by user name and password
+            </summary>
+            <remarks>
+            <![CDATA[If login failed, the error message of trans object will return to invoke.]]>
+            </remarks>
+            <param name="loginName">login name</param>
+            <param name="password">password</param>
+            <returns>Return token if success, the exception will return if failed</returns>
+        </member>
         <member name="T:SuperPartner.Filters.SpAuthFilter">
             <summary>
             The authorization filter

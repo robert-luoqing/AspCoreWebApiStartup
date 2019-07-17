@@ -4,9 +4,31 @@
         <name>SuperPartner.Model</name>
     </assembly>
     <members>
+        <member name="P:SuperPartner.Model.Common.SpConfiguration.PermissionRedis">
+            <summary>
+            Permission redis connection string
+            </summary>
+        </member>
+        <member name="P:SuperPartner.Model.Common.SpConfiguration.RedisPrefix">
+            <summary>
+            The whole app's redis prefix
+            The benefit can use one redis for multiple project. not concern the duplicate keys
+            </summary>
+        </member>
+        <member name="P:SuperPartner.Model.Common.SpConfiguration.CommonRedis">
+            <summary>
+            Common Redis connection string
+            </summary>
+        </member>
         <member name="P:SuperPartner.Model.Common.SpConfiguration.PwdExpiredInterval">
             <summary>
-            密码过期时间间隔
+            The interval of password expired
+            </summary>
+        </member>
+        <member name="P:SuperPartner.Model.Common.SpConfiguration.MaxLoginTryTimes">
+            <summary>
+            The max try times of login
+            null will be infinite times of try
             </summary>
         </member>
         <member name="T:SuperPartner.Model.Common.WsPager">

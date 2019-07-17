@@ -65,5 +65,24 @@ namespace SuperPartner.Controllers
             this.userManager.UpdateUser(user);
             return new WsResponse();
         }
+
+        /// <summary>
+        /// Login by user name and password
+        /// </summary>
+        /// <remarks>
+        /// <![CDATA[If login failed, the error message of trans object will return to invoke.]]>
+        /// </remarks>
+        /// <param name="loginName">login name</param>
+        /// <param name="password">password</param>
+        /// <returns>Return token if success, the exception will return if failed</returns>
+        [HttpPost("login")]
+        public ActionResult<WsResponse<string>> Login(string loginName, string password)
+        {
+            var token = this.userManager.Login(loginName, password);
+            return new WsResponse<string>()
+            {
+                Data = token
+            };
+        }
     }
 }

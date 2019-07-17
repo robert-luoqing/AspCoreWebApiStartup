@@ -1,6 +1,7 @@
 ﻿using SuperPartner.Biz.Common;
 using SuperPartner.DataLayer.Organization;
 using SuperPartner.Model.Common;
+using SuperPartner.Model.Exception;
 using SuperPartner.Model.Organization.User;
 using SuperPartner.Utils.Cryptography;
 using SuperPartner.Utils.Redis;
@@ -18,13 +19,45 @@ namespace SuperPartner.Biz.Organization
             this.userDao = userDao;
         }
 
-        public string Login(string userName, string password)
+        /// <summary>
+        /// The handler have below step
+        /// 1. Get user by login name
+        /// 2. Compaire the trytimes of failed, if failed try times above a special number which defined in setting. the direct return(throw) error
+        /// 3. if password incorrect, increase trytimes
+        /// </summary>
+        /// <param name="loginName">login name</param>
+        /// <param name="password">password</param>
+        /// <returns>return token</returns>
+        public string Login(string loginName, string password)
         {
-            // Verify user name and password
-            // .....
-            // var token = this.BizContext.TokenHandler.GeneToken(user);
-            // return token;
-            return "";
+            if (string.IsNullOrWhiteSpace(loginName) || string.IsNullOrWhiteSpace(password))
+                throw new SpException("The login name and password do not allow to be null");
+
+            var users = this.userDao.GetLoginUserByLoginName(loginName.Trim());
+            if (users.Count != 1)
+                throw new SpException("The user name and password incorrect");
+            var user = users[0];
+
+            var remainTimes = (this.BizContext.Configuration.MaxLoginTryTimes ?? int.MaxValue) - (user.FailTimes ?? 0);
+            if (remainTimes <= 0)
+            {
+                this.userDao.UpdateFailTimes(user.UserId, (user.FailTimes ?? 0) + 1);
+                throw new SpException("The account locked, because login times reach maxinum");
+            }
+
+            if (user.Password != MD5Helper.ToMD5(password))
+            {
+                this.userDao.UpdateFailTimes(user.UserId, (user.FailTimes ?? 0) + 1);
+                if (remainTimes < 4)
+                    throw new SpException("The user name and password incorrect. You have " + (remainTimes - 1).ToString() + " time(s) to try");
+                else
+                    throw new SpException("The user name and password incorrect");
+            }
+
+            this.userDao.UpdateFailTimes(user.UserId, 0);
+            user.Password = null;
+            var token = this.BizContext.TokenHandler.GeneToken(user);
+            return token;
         }
 
         /// <summary>
