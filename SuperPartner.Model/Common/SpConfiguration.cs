@@ -21,6 +21,7 @@ namespace SuperPartner.Model.Common
         public string CommonRedis { get; set; }
         /// <summary>
         /// The interval of password expired
+        /// The unit: Day
         /// </summary>
         public int PwdExpiredInterval { get; set; }
         /// <summary>

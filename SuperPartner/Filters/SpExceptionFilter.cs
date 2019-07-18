@@ -47,6 +47,7 @@ namespace SuperPartner.Filters
 
             response.Trans.ErrorMsg = exception.Message;
             var result = new JsonResult(response);
+            result.StatusCode = 404;
             context.Result = result;
         }
     }

@@ -57,5 +57,27 @@
             It also log the exception to difference level. It can use analyze what issue occur in app.
             </summary>
         </member>
+        <member name="T:SuperPartner.Filters.SpFunctionAttribute">
+            <summary>
+            It is attribute which use to check whether the user can access the functions.
+            </summary>
+        </member>
+        <member name="F:SuperPartner.Filters.SpFunctionAttribute.passedByOneOf">
+            <summary>
+            If one of functions has passed permission check, then the authorizion have passed if passedByOneOf is true.
+            else all of functions must be passed.
+            </summary>
+        </member>
+        <member name="F:SuperPartner.Filters.SpFunctionAttribute.functions">
+            <summary>
+            The functions which need to checked
+            </summary>
+        </member>
+        <member name="M:SuperPartner.Filters.SpFunctionAttribute.OnActionExecuting(Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext)">
+            <summary>
+            Check permission according to the functions
+            </summary>
+            <param name="context"></param>
+        </member>
     </members>
 </doc>

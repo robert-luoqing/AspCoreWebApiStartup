@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Filters;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Filters;
 using SuperPartner.Biz.Common;
 using SuperPartner.Model.Organization.User;
 using SuperPartner.Permission.TokenHandler;
@@ -15,19 +16,23 @@ namespace SuperPartner.Filters
     /// </summary>
     public class SpAuthFilter : IAuthorizationFilter
     {
-        
         public void OnAuthorization(AuthorizationFilterContext context)
         {
             var tokenHandler = context.HttpContext.RequestServices.GetService(typeof(ITokenHandler)) as ITokenHandler;
-            var spContext = context.HttpContext.RequestServices.GetService(typeof(BizContext)) as BizContext;
-            spContext.TokenHandler = tokenHandler;
+            var bizContext = context.HttpContext.RequestServices.GetService(typeof(BizContext)) as BizContext;
+            bizContext.TokenHandler = tokenHandler;
 
             var token = context.HttpContext.Request.Headers["token"];
-            spContext.Token = token;
-            if(!string.IsNullOrEmpty(token))
+            bizContext.Token = token;
+            if (!string.IsNullOrEmpty(token))
             {
-                spContext.LoginUser = tokenHandler.GetAssociateObjectByToken<LoginUser>(token);
+                bizContext.LoginUser = tokenHandler.GetAssociateObjectByToken<LoginUser>(token);
             }
+
+            //if (bizContext.Configuration.NeedCheckPermissionFromUrl)
+            //{
+                
+            //}
         }
     }
 }

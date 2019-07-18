@@ -23,6 +23,7 @@
         <member name="P:SuperPartner.Model.Common.SpConfiguration.PwdExpiredInterval">
             <summary>
             The interval of password expired
+            The unit: Day
             </summary>
         </member>
         <member name="P:SuperPartner.Model.Common.SpConfiguration.MaxLoginTryTimes">
