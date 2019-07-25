@@ -24,5 +24,15 @@ namespace SuperPartner.Permission.Authorization
         /// <param name="funcCode">The funcation code which defined in system</param>
         /// <returns></returns>
         bool CheckFunction(string userId, string funcCode);
+
+        /// <summary>
+        /// Does the permission will be cache in memory to make better performance
+        /// </summary>
+        bool UseCache { get; set; }
+
+        /// <summary>
+        /// Clear cache if UseCache is true
+        /// </summary>
+        void ClearCache();
     }
 }

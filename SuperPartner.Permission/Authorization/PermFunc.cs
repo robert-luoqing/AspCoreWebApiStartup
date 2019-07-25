@@ -6,7 +6,7 @@ namespace SuperPartner.Permission.Authorization
 {
     public class PermFunc
     {
-        public string FuncId { get; set; }
+        public string FuncCode { get; set; }
         public string FuncName { get; set; }
         /// <summary>
         /// Multiple url, the url is Regex, each url sperate by "\n"

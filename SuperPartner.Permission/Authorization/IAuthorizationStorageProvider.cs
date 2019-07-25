@@ -13,15 +13,15 @@ namespace SuperPartner.Permission.Authorization
     {
         /// <summary>
         /// Create a function in storage
+        /// Notice FuncCode must uniquer
         /// </summary>
         /// <param name="func">Function object</param>
-        /// <returns>The func Id</returns>
-        int CreateFunc(PermFunc func);
+        void CreateFunc(PermFunc func);
         /// <summary>
         /// Remove function from storage
         /// </summary>
-        /// <param name="funcId">Funcaction Id</param>
-        void RemoveFunc(string funcId);
+        /// <param name="funcCode">Funcaction Code</param>
+        void RemoveFunc(string funcCode);
         /// <summary>
         /// Get function objects by condition
         /// </summary>
@@ -46,7 +46,7 @@ namespace SuperPartner.Permission.Authorization
         /// <param name="userId">User id</param>
         /// <param name="funcCode">The func code, like "User Operation" etc</param>
         /// <param name="level">The level, sometimes, the requirement need implement the functions like we need assign user to access whole department user</param>
-        void AddFuncToUser(string userId, string funcCode, int level);
+        void AddFuncToUser(string userId, string funcCode, AccessLevel level);
         /// <summary>
         /// Remove a func from User
         /// </summary>
