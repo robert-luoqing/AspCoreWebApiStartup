@@ -63,6 +63,95 @@ After that, you can inject "ITokenHandler" or inject "BizContext" to use TokenHa
     }
 ```
 
+# Permission Checker
+The framework implement simple permission checking. There are two check method. One is Url checking. Another is function point check.  
+## Initial Check module
+Put below code in ConfigureServices method of Startup.cs
+```c#
+// Permission implement
+services.AddDbContext<PermissionDataContext>
+        (options =>
+        options.UseSqlServer(Configuration.GetConnectionString("SpFrameworkDatabase"), b => b.MigrationsAssembly("SuperPartner"))
+            .UseLoggerFactory(MyLoggerFactory)
+    );
+services.AddScoped(typeof(IAuthorizationStorageProvider), typeof(AuthorizationStorageProvider));
+services.AddScoped(typeof(IAuthorizationHandler), typeof(AuthorizationHandler));
+```
+## Url checking
+If enable Url checking, you need set NeedCheckPermissionFromUrl to true. Of course, you can direct code in SpAuthFilter.cs
+```json
+    "NeedCheckPermissionFromUrl": true,
+    "IgnoreCheckPermissionUrls": [
+      "^/api/user/login"
+    ],
+    "IgnoreCheckPermissionUrlsWhenLogined": []
+```
+Put code to check url in SpAuthFilter.cs
+```c#
+if (bizContext.Configuration.NeedCheckPermissionFromUrl)
+{
+    var url = context.HttpContext.Request.Path.Value;
+    var authorizationHandler = context.HttpContext.RequestServices.GetService(typeof(IAuthorizationHandler)) as IAuthorizationHandler;
+    var isPassed = authorizationHandler.CheckUrl(bizContext.LoginUser.UserId.ToString(),
+        url,
+        bizContext.Configuration.IgnoreCheckPermissionUrls,
+        bizContext.Configuration.IgnoreCheckPermissionUrlsWhenLogined);
+    if (isPassed) return; // passed check permission
+
+    // failed to check url according permission
+    if (bizContext.LoginUser == null)
+    {
+        var response = new WsResponse();
+        response.Trans.ErrorCode = "401";
+        response.Trans.ErrorMsg = "Not login";
+        var result = new JsonResult(response);
+        result.StatusCode = 401;
+        context.Result = result;
+    }
+    else
+    {
+        var response = new WsResponse();
+        response.Trans.ErrorCode = "403";
+        response.Trans.ErrorMsg = "Authorization Failed";
+        var result = new JsonResult(response);
+        result.StatusCode = 403;
+        context.Result = result;
+    }
+}
+```
+## Function point checking
+If enable function checking, you just put [SpFunction("UserOperation")] attribute on your API like below
+```c#
+[HttpPost("list")]
+[SpFunction("UserOperation")]
+public ActionResult<List<WsUserInfo>> GetUserList([FromBody] WsListRequest<string> req)
+{
+    return this.userManager.GetUserList(req.Condition, req.Pager);
+}
+```
+Notice, "UserOperation" is function code. These code will configued in database. You can see "How to map functions to user"
+## How to map functions to user
+- Defined the function point. 
+The function point includes the associate urls and the description.   
+You can use "IAuthorizationStorageProvider.CreateOrUpdateFunc" to define a function point first
+```c#
+var provider = new AuthorizationStorageProvider(dataContext);
+var extendProperties = new Dictionary<string, string>();
+extendProperties.Add("Index", "0001");
+provider.CreateOrUpdateFunc(new PermFunc()
+{
+    FuncCode = "UserOperation",
+    FuncName = "User Operation",
+    FuncDesc = "Operating user module, like query user list, add/update/delete user",
+    AssociateUrls = "^/api/user/",
+    ExtendProperties = extendProperties
+});
+```
+- Assign the function to specify user.
+```c#
+provider.AssignFuncToUser("1", "UserOperation", AccessLevel.AccessSelfData);
+```
+
 # Unit test support
 The platform have add unit test case which can help developer to do unit test, prepare unit test data (stub) and the environment.  
 All test case will be put in SuperPartner.Test project. The root folder is corresponse with project name which you need test.
@@ -128,5 +217,6 @@ public void TestLoginWithNormalCorrectLogin()
 TODO:
 - jwt support
 - function permission support
+- add rold into permssion
 - add auth in swagger
 

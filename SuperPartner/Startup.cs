@@ -21,11 +21,17 @@ using Microsoft.EntityFrameworkCore;
 using SuperPartner.DataLayer.Common;
 using Swashbuckle.AspNetCore.Swagger;
 using System.IO;
+using SuperPartner.Permission.DataContext;
+using Microsoft.Extensions.Logging.Console;
+using SuperPartner.Permission.Authorization;
 
 namespace SuperPartner
 {
     public class Startup
     {
+        public static readonly LoggerFactory MyLoggerFactory
+            = new LoggerFactory(new[] { new ConsoleLoggerProvider((_, __) => true, true) });
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -67,9 +73,20 @@ namespace SuperPartner
             services.AddScoped<BizContext>();
             services.AddScoped<DaoContext>();
 
+            // Permission implement
+            services.AddDbContext<PermissionDataContext>
+                 (options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("SpFrameworkDatabase"), b => b.MigrationsAssembly("SuperPartner"))
+                        .UseLoggerFactory(MyLoggerFactory)
+                );
+            services.AddScoped(typeof(IAuthorizationStorageProvider), typeof(AuthorizationStorageProvider));
+            services.AddScoped(typeof(IAuthorizationHandler), typeof(AuthorizationHandler));
+
+
             services.AddDbContext<SpFrameworkContext>
                 (options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("SpFrameworkDatabase"))
+                       options.UseSqlServer(Configuration.GetConnectionString("SpFrameworkDatabase"))
+                        .UseLoggerFactory(MyLoggerFactory)
                 );
 
             services.AddMvc(options =>
@@ -78,15 +95,11 @@ namespace SuperPartner
                 options.Filters.Add(new SpAuthFilter());
             }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-            // Register the Swagger generator, defining 1 or more Swagger documents
-            // Detail see https://docs.microsoft.com/en-us/aspnet/core/tutorials/getting-started-with-swashbuckle?view=aspnetcore-2.2&tabs=visual-studio
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new Info { Title = "Super Partner Api", Version = "v1" });
-                c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "SuperPartner.xml"));
-                c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "SuperPartner.Model.xml"));
-            });
+            // swagger configuration
+            SwaggerSetting.Confige(services);
         }
+
+
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)

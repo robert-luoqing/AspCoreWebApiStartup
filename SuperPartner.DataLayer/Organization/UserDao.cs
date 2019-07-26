@@ -26,24 +26,22 @@ namespace SuperPartner.DataLayer.Organization
         /// <returns>Return matched user infomation</returns>
         public virtual List<WsUserInfo> GetUserList(string keyword, WsPager pager)
         {
-            using (var context = this.DaoContext.GetDbContext())
+            var context = this.DaoContext.GetDbContext();
+            var query = from o in context.User
+                        select new WsUserInfo()
+                        {
+                            UserId = o.UserId,
+                            UserName = o.UserName,
+                            LoginName = o.LoginName,
+                            Desc = o.Desc
+                        };
+            if (!string.IsNullOrWhiteSpace(keyword))
             {
-                var query = from o in context.User
-                            select new WsUserInfo()
-                            {
-                                UserId = o.UserId,
-                                UserName = o.UserName,
-                                LoginName = o.LoginName,
-                                Desc = o.Desc
-                            };
-                if (!string.IsNullOrWhiteSpace(keyword))
-                {
-                    keyword = keyword.Trim();
-                    query = query.Where(o => o.UserName.Contains(keyword) || o.LoginName.Contains(keyword));
-                }
-
-                return this.ApplyPager(query, pager).ToList();
+                keyword = keyword.Trim();
+                query = query.Where(o => o.UserName.Contains(keyword) || o.LoginName.Contains(keyword));
             }
+
+            return this.ApplyPager(query, pager).ToList();
         }
 
         /// <summary>
@@ -53,19 +51,17 @@ namespace SuperPartner.DataLayer.Organization
         /// <returns>return matched user count</returns>
         public virtual int GetUserCount(string keyword)
         {
-            using (var context = this.DaoContext.GetDbContext())
+            var context = this.DaoContext.GetDbContext();
+            var query = from o in context.User
+                        select o;
+
+            if (!string.IsNullOrWhiteSpace(keyword))
             {
-                var query = from o in context.User
-                            select o;
-
-                if (!string.IsNullOrWhiteSpace(keyword))
-                {
-                    keyword = keyword.Trim();
-                    query = query.Where(o => o.UserName.Contains(keyword) || o.LoginName.Contains(keyword));
-                }
-
-                return query.Count();
+                keyword = keyword.Trim();
+                query = query.Where(o => o.UserName.Contains(keyword) || o.LoginName.Contains(keyword));
             }
+
+            return query.Count();
         }
 
         /// <summary>
@@ -75,26 +71,24 @@ namespace SuperPartner.DataLayer.Organization
         /// <returns>The new user id</returns>
         public virtual int AddUser(WsUserDetail user)
         {
-            using (var context = this.DaoContext.GetDbContext())
-            {
-                var dbEntity = new User();
-                dbEntity.UserName = user.UserName;
-                dbEntity.LoginName = user.LoginName;
-                dbEntity.Password = user.Password;
-                dbEntity.PwdExpredDate = user.PwdExpredDate;
-                dbEntity.Status = (int)UserStatus.Normal;
-                dbEntity.Desc = user.Desc;
-                dbEntity.FailTimes = 0;
-                dbEntity.ModifiedBy = user.ModifiedBy;
-                dbEntity.ModifiedTime = DateTime.Now;
-                dbEntity.CreatedBy = user.CreatedBy;
-                dbEntity.CreatedTime = DateTime.Now;
+            var context = this.DaoContext.GetDbContext();
+            var dbEntity = new User();
+            dbEntity.UserName = user.UserName;
+            dbEntity.LoginName = user.LoginName;
+            dbEntity.Password = user.Password;
+            dbEntity.PwdExpredDate = user.PwdExpredDate;
+            dbEntity.Status = (int)UserStatus.Normal;
+            dbEntity.Desc = user.Desc;
+            dbEntity.FailTimes = 0;
+            dbEntity.ModifiedBy = user.ModifiedBy;
+            dbEntity.ModifiedTime = DateTime.Now;
+            dbEntity.CreatedBy = user.CreatedBy;
+            dbEntity.CreatedTime = DateTime.Now;
 
-                context.User.Add(dbEntity);
-                context.SaveChanges();
+            context.User.Add(dbEntity);
+            context.SaveChanges();
 
-                return dbEntity.UserId;
-            }
+            return dbEntity.UserId;
         }
 
         /// <summary>
@@ -103,21 +97,19 @@ namespace SuperPartner.DataLayer.Organization
         /// <param name="user">User object</param>
         public virtual void UpdateUser(WsUserDetail user)
         {
-            using (var context = this.DaoContext.GetDbContext())
-            {
-                var dbEntity = new User();
-                dbEntity.UserId = user.UserId;
-                context.User.Attach(dbEntity);
-                if (context.Entry(dbEntity).State == EntityState.Added)
-                    throw new SpException("No record exist");
+            var context = this.DaoContext.GetDbContext();
+            var dbEntity = new User();
+            dbEntity.UserId = user.UserId;
+            context.User.Attach(dbEntity);
+            if (context.Entry(dbEntity).State == EntityState.Added)
+                throw new SpException("No record exist");
 
-                dbEntity.UserName = user.UserName;
-                dbEntity.LoginName = user.LoginName;
-                dbEntity.Desc = user.Desc;
-                dbEntity.ModifiedBy = user.ModifiedBy;
-                dbEntity.ModifiedTime = DateTime.Now;
-                context.SaveChanges();
-            }
+            dbEntity.UserName = user.UserName;
+            dbEntity.LoginName = user.LoginName;
+            dbEntity.Desc = user.Desc;
+            dbEntity.ModifiedBy = user.ModifiedBy;
+            dbEntity.ModifiedTime = DateTime.Now;
+            context.SaveChanges();
         }
 
         /// <summary>
@@ -126,14 +118,12 @@ namespace SuperPartner.DataLayer.Organization
         /// <param name="userId">The user id which need deleted</param>
         public virtual void DeleteUser(int userId)
         {
-            using (var context = this.DaoContext.GetDbContext())
-            {
-                var dbEntity = new User();
-                dbEntity.UserId = userId;
-                context.User.Attach(dbEntity);
-                context.User.Remove(dbEntity);
-                context.SaveChanges();
-            }
+            var context = this.DaoContext.GetDbContext();
+            var dbEntity = new User();
+            dbEntity.UserId = userId;
+            context.User.Attach(dbEntity);
+            context.User.Remove(dbEntity);
+            context.SaveChanges();
         }
 
         /// <summary>
@@ -143,21 +133,19 @@ namespace SuperPartner.DataLayer.Organization
         /// <returns>The data of login</returns>
         public virtual List<LoginUser> GetLoginUserByLoginName(string loginName)
         {
-            using (var context = this.DaoContext.GetDbContext())
-            {
-                var query = from o in context.User
-                            where o.LoginName == loginName
-                            select new LoginUser()
-                            {
-                                UserId = o.UserId,
-                                UserName = o.UserName,
-                                LoginName = o.LoginName,
-                                Password = o.Password,
-                                FailTimes = o.FailTimes
-                            };
+            var context = this.DaoContext.GetDbContext();
+            var query = from o in context.User
+                        where o.LoginName == loginName
+                        select new LoginUser()
+                        {
+                            UserId = o.UserId,
+                            UserName = o.UserName,
+                            LoginName = o.LoginName,
+                            Password = o.Password,
+                            FailTimes = o.FailTimes
+                        };
 
-                return query.ToList();
-            }
+            return query.ToList();
         }
 
         /// <summary>
@@ -167,14 +155,12 @@ namespace SuperPartner.DataLayer.Organization
         /// <param name="failTime">Fail time which need to set</param>
         public virtual void UpdateFailTimes(int userId, int failTime)
         {
-            using (var context = this.DaoContext.GetDbContext())
-            {
-                var dbEntity = new User();
-                dbEntity.UserId = userId;
-                context.User.Attach(dbEntity);
-                dbEntity.FailTimes = failTime;
-                context.SaveChanges();
-            }
+            var context = this.DaoContext.GetDbContext();
+            var dbEntity = new User();
+            dbEntity.UserId = userId;
+            context.User.Attach(dbEntity);
+            dbEntity.FailTimes = failTime;
+            context.SaveChanges();
         }
     }
 }

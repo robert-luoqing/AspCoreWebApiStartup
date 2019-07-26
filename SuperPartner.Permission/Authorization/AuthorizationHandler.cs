@@ -78,9 +78,23 @@ namespace SuperPartner.Permission.Authorization
         /// </summary>
         /// <param name="userId">User which need to check</param>
         /// <param name="url">The url, notice: the url does NOT case sensitive</param>
+        /// <param name="ignoreUrls">Those url will not to check in CheckUrl method. It means the checked url in those urls will reutnr true</param>
+        /// <param name="ignoreUrlsForLoginUser">Those url will not to check in CheckUrl method when it is login user. It means the checked url in those urls for login users will reutnr true</param>
         /// <returns>return true if the user have url permission</returns>
-        public bool CheckUrl(string userId, string url)
+        public bool CheckUrl(string userId, string url, List<string> ignoreUrls, List<string> ignoreUrlsForLoginUser)
         {
+            // Check ignore url
+            bool isIngore = CheckIfMatched(ignoreUrls, url);
+            if (isIngore) return true;
+
+            // If no login, then return false;
+            if (string.IsNullOrWhiteSpace(userId)) return false;
+
+            // Check ignore url for login user
+            isIngore = CheckIfMatched(ignoreUrlsForLoginUser, url);
+            if (isIngore) return true;
+
+            // Get user's function
             var userFuncs = GetFuncsByUser(userId);
 
             // Check the permission
@@ -98,18 +112,9 @@ namespace SuperPartner.Permission.Authorization
                         var funcObj = funcs[func.FuncCode];
                         if (!string.IsNullOrWhiteSpace(funcObj.AssociateUrls))
                         {
-                            var funcUrls = funcObj.AssociateUrls.Split("\n".ToCharArray());
-                            foreach (var funcUrl in funcUrls)
-                            {
-                                if (!string.IsNullOrWhiteSpace(funcUrl))
-                                {
-                                    var matched = Regex.IsMatch(url, funcUrl.Trim(), RegexOptions.IgnoreCase);
-                                    if (matched)
-                                    {
-                                        return true;
-                                    }
-                                }
-                            }
+                            var funcUrls = funcObj.AssociateUrls.Split("\n".ToCharArray()).ToList();
+                            var matched = CheckIfMatched(funcUrls, url);
+                            if (matched) return true;
                         }
                     }
                 }
@@ -190,6 +195,23 @@ namespace SuperPartner.Permission.Authorization
             }
 
             return results;
+        }
+
+        private bool CheckIfMatched(List<string> urlPatterns, string url)
+        {
+            if (urlPatterns == null) urlPatterns = new List<string>();
+            var isIngore = false;
+            foreach (var ignoreUrl in urlPatterns)
+            {
+                var matched = Regex.IsMatch(url, ignoreUrl.Trim(), RegexOptions.IgnoreCase);
+                if (matched)
+                {
+                    isIngore = true;
+                    break;
+                }
+            }
+
+            return isIngore;
         }
     }
 }

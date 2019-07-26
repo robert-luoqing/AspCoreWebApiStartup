@@ -11,7 +11,7 @@ namespace SuperPartner.Test.Permission
         public List<PermFunc> funcsInMemory = new List<PermFunc>();
         public int accessTimes = 0;
 
-        public void AddFuncToUser(string userId, string funcCode, AccessLevel level)
+        public void AssignFuncToUser(string userId, string funcCode, AccessLevel level)
         {
             if (!this.user2FuncsInMemory.ContainsKey(userId))
                 this.user2FuncsInMemory.Add(userId, new List<FuncAssignation>());
@@ -31,7 +31,7 @@ namespace SuperPartner.Test.Permission
             this.user2FuncsInMemory[userId] = funcCodes;
         }
 
-        public void CreateFunc(PermFunc func)
+        public void CreateOrUpdateFunc(PermFunc func)
         {
             var removedFuncs = funcsInMemory.Where(o => o.FuncCode == func.FuncCode).ToList();
             foreach (var item in removedFuncs)

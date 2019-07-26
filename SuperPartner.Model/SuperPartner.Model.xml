@@ -32,6 +32,26 @@
             null will be infinite times of try
             </summary>
         </member>
+        <member name="P:SuperPartner.Model.Common.SpConfiguration.NeedCheckPermissionFromUrl">
+            <summary>
+            Does it need check permission by url, the url setting in function
+            </summary>
+        </member>
+        <member name="P:SuperPartner.Model.Common.SpConfiguration.IgnoreCheckPermissionUrls">
+            <summary>
+            Those urls will be ignored by authorization
+            It can support regex
+            </summary>
+        </member>
+        <member name="P:SuperPartner.Model.Common.SpConfiguration.IgnoreCheckPermissionUrlsWhenLogined">
+            <summary>
+            Those urls will be ignored if the user already logined by authorization
+            </summary>
+            <remarks>
+            The difference with IgnoreCheckPermissionUrls, IgnoreCheckPermissionUrls will ignore check any time, 
+            But IgnoreCheckPermissionUrlsWhenLogined only ignore for logined user.
+            </remarks>
+        </member>
         <member name="T:SuperPartner.Model.Common.WsPager">
             <summary>
             Pager parameter for request

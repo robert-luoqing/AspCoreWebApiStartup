@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SuperPartner.Biz.Organization;
+using SuperPartner.Filters;
 using SuperPartner.Model.Common;
 using SuperPartner.Model.Organization.User;
 using System;
@@ -25,6 +26,7 @@ namespace SuperPartner.Controllers
         /// <param name="req">The conditio property is keyword which use to search User Name or Login Name</param>
         /// <returns>Matched user information</returns>
         [HttpPost("list")]
+        [SpFunction("UserOperation")]
         public ActionResult<List<WsUserInfo>> GetUserList([FromBody] WsListRequest<string> req)
         {
             return this.userManager.GetUserList(req.Condition, req.Pager);
@@ -36,6 +38,7 @@ namespace SuperPartner.Controllers
         /// <param name="req">The conditio property is keyword which use to search User Name or Login Name</param>
         /// <returns>matched user count</returns>
         [HttpPost("count")]
+        [SpFunction("UserOperation")]
         public ActionResult<WsResponse<int>> GetUserCount([FromBody] WsListRequest<string> req)
         {
             WsResponse<int> result = this.userManager.GetUserCount(req.Condition);
@@ -48,6 +51,7 @@ namespace SuperPartner.Controllers
         /// <param name="user">user information</param>
         /// <returns>Return success status if success</returns>
         [HttpPost("add")]
+        [SpFunction("UserOperation")]
         public ActionResult<WsResponse> AddUser([FromBody] WsUserDetail user)
         {
             this.userManager.AddUser(user);
@@ -60,6 +64,7 @@ namespace SuperPartner.Controllers
         /// <param name="user">user information</param>
         /// <returns>Return success status if success</returns>
         [HttpPost("update")]
+        [SpFunction("UserOperation")]
         public ActionResult<WsResponse> UpdateUser([FromBody] WsUserDetail user)
         {
             this.userManager.UpdateUser(user);

@@ -48,7 +48,7 @@ namespace SuperPartner.Test.Permission
             var stub = CreateStub();
 
             var authorizationHandler = new AuthorizationHandler(stub);
-            var result = authorizationHandler.CheckUrl("1", "/api/TEST");
+            var result = authorizationHandler.CheckUrl("1", "/api/TEST", null, null);
             Assert.IsTrue(result);
         }
 
@@ -58,7 +58,7 @@ namespace SuperPartner.Test.Permission
             var stub = CreateStub();
 
             var authorizationHandler = new AuthorizationHandler(stub);
-            var result = authorizationHandler.CheckUrl("1", "/api/Tns/abc?a=23");
+            var result = authorizationHandler.CheckUrl("1", "/api/Tns/abc?a=23", null, null);
             Assert.IsTrue(result);
         }
 
@@ -68,7 +68,7 @@ namespace SuperPartner.Test.Permission
             var stub = CreateStub();
 
             var authorizationHandler = new AuthorizationHandler(stub);
-            var result = authorizationHandler.CheckUrl("1", "a/api/TEST");
+            var result = authorizationHandler.CheckUrl("1", "a/api/TEST", null, null);
             Assert.IsFalse(result);
         }
 
@@ -78,7 +78,7 @@ namespace SuperPartner.Test.Permission
             var stub = CreateStub();
 
             var authorizationHandler = new AuthorizationHandler(stub);
-            var result = authorizationHandler.CheckUrl("1", "api/TEST");
+            var result = authorizationHandler.CheckUrl("1", "api/TEST", null, null);
             Assert.IsFalse(result);
         }
 
@@ -88,7 +88,7 @@ namespace SuperPartner.Test.Permission
             var stub = CreateStub();
 
             var authorizationHandler = new AuthorizationHandler(stub);
-            var result = authorizationHandler.CheckUrl("1", "/api/TEST/abc?c=2");
+            var result = authorizationHandler.CheckUrl("1", "/api/TEST/abc?c=2", null, null);
             Assert.IsFalse(result);
         }
 
@@ -98,7 +98,7 @@ namespace SuperPartner.Test.Permission
             var stub = CreateStub();
 
             var authorizationHandler = new AuthorizationHandler(stub);
-            var result = authorizationHandler.CheckUrl("1", "api/Tns");
+            var result = authorizationHandler.CheckUrl("1", "api/Tns", null, null);
             Assert.IsFalse(result);
         }
 

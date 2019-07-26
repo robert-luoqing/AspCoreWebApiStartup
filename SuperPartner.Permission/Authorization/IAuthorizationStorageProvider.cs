@@ -16,7 +16,7 @@ namespace SuperPartner.Permission.Authorization
         /// Notice FuncCode must uniquer
         /// </summary>
         /// <param name="func">Function object</param>
-        void CreateFunc(PermFunc func);
+        void CreateOrUpdateFunc(PermFunc func);
         /// <summary>
         /// Remove function from storage
         /// </summary>
@@ -46,7 +46,7 @@ namespace SuperPartner.Permission.Authorization
         /// <param name="userId">User id</param>
         /// <param name="funcCode">The func code, like "User Operation" etc</param>
         /// <param name="level">The level, sometimes, the requirement need implement the functions like we need assign user to access whole department user</param>
-        void AddFuncToUser(string userId, string funcCode, AccessLevel level);
+        void AssignFuncToUser(string userId, string funcCode, AccessLevel level);
         /// <summary>
         /// Remove a func from User
         /// </summary>
