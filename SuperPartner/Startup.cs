@@ -29,6 +29,9 @@ namespace SuperPartner
 {
     public class Startup
     {
+        /// <summary>
+        /// Console logger provider.
+        /// </summary>
         public static readonly LoggerFactory MyLoggerFactory
             = new LoggerFactory(new[] { new ConsoleLoggerProvider((_, __) => true, true) });
 
@@ -98,8 +101,6 @@ namespace SuperPartner
             // swagger configuration
             SwaggerSetting.Confige(services);
         }
-
-
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)

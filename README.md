@@ -131,6 +131,8 @@ public ActionResult<List<WsUserInfo>> GetUserList([FromBody] WsListRequest<strin
 ```
 Notice, "UserOperation" is function code. These code will configued in database. You can see "How to map functions to user"
 ## How to map functions to user
+- Database install
+You can create table from SuperPartner/Database/permission.sql. After create the table, you can confige the connect string in services.AddDbContext<PermissionDataContext> 
 - Defined the function point. 
 The function point includes the associate urls and the description.   
 You can use "IAuthorizationStorageProvider.CreateOrUpdateFunc" to define a function point first
@@ -219,4 +221,4 @@ TODO:
 - function permission support
 - add rold into permssion
 - add auth in swagger
-
+- add OAuth support
