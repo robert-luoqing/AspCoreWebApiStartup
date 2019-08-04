@@ -69,13 +69,16 @@ The framework implement simple permission checking. There are two check method. 
 Put below code in ConfigureServices method of Startup.cs
 ```c#
 // Permission implement
-services.AddDbContext<PermissionDataContext>
-        (options =>
-        options.UseSqlServer(Configuration.GetConnectionString("SpFrameworkDatabase"), b => b.MigrationsAssembly("SuperPartner"))
-            .UseLoggerFactory(MyLoggerFactory)
-    );
+// The inject will be use for UI
 services.AddScoped(typeof(IAuthorizationStorageProvider), typeof(AuthorizationStorageProvider));
-services.AddScoped(typeof(IAuthorizationHandler), typeof(AuthorizationHandler));
+var optionsBuilder = new DbContextOptionsBuilder<PermissionDataContext>();
+optionsBuilder.UseSqlServer(Configuration.GetConnectionString("SpFrameworkDatabase"));
+var dataContext = new PermissionDataContext(optionsBuilder.Options);
+var authorizationHandler = new AuthorizationHandler(new AuthorizationStorageProvider(dataContext));
+// User cache to save performance. But the ClearCache must invoke if any change in AuthorizationStorageProvider
+authorizationHandler.UseCache = true;
+// It should be define as singleton
+services.AddSingleton(typeof(IAuthorizationHandler), authorizationHandler);
 ```
 ## Url checking
 If enable Url checking, you need set NeedCheckPermissionFromUrl to true. Of course, you can direct code in SpAuthFilter.cs
@@ -222,3 +225,5 @@ TODO:
 - add rold into permssion
 - add auth in swagger
 - add OAuth support
+- add docker support
+

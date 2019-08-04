@@ -76,21 +76,28 @@ namespace SuperPartner
             services.AddScoped<BizContext>();
             services.AddScoped<DaoContext>();
 
-            // Permission implement
             services.AddDbContext<PermissionDataContext>
                  (options =>
                     options.UseSqlServer(Configuration.GetConnectionString("SpFrameworkDatabase"), b => b.MigrationsAssembly("SuperPartner"))
                         .UseLoggerFactory(MyLoggerFactory)
                 );
-            services.AddScoped(typeof(IAuthorizationStorageProvider), typeof(AuthorizationStorageProvider));
-            services.AddScoped(typeof(IAuthorizationHandler), typeof(AuthorizationHandler));
-
-
             services.AddDbContext<SpFrameworkContext>
                 (options =>
                        options.UseSqlServer(Configuration.GetConnectionString("SpFrameworkDatabase"))
                         .UseLoggerFactory(MyLoggerFactory)
                 );
+
+            // Permission implement
+            // The inject will be use for UI
+            services.AddScoped(typeof(IAuthorizationStorageProvider), typeof(AuthorizationStorageProvider));
+            var optionsBuilder = new DbContextOptionsBuilder<PermissionDataContext>();
+            optionsBuilder.UseSqlServer(Configuration.GetConnectionString("SpFrameworkDatabase"));
+            var dataContext = new PermissionDataContext(optionsBuilder.Options);
+            var authorizationHandler = new AuthorizationHandler(new AuthorizationStorageProvider(dataContext));
+            // User cache to save performance. But the ClearCache must invoke if any change in AuthorizationStorageProvider
+            authorizationHandler.UseCache = true;
+            // It should be define as singleton
+            services.AddSingleton(typeof(IAuthorizationHandler), authorizationHandler);
 
             services.AddMvc(options =>
             {

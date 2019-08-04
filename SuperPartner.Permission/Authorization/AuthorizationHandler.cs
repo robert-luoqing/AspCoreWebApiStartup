@@ -125,8 +125,8 @@ namespace SuperPartner.Permission.Authorization
 
         public void ClearCache()
         {
-            this.funcsCache = null;
-            this.permissionsCache.Clear();
+            funcsCache = null;
+            permissionsCache.Clear();
         }
 
         /// <summary>
@@ -144,9 +144,9 @@ namespace SuperPartner.Permission.Authorization
             // Get user's function from momery cache if UseCache is enabled
             if (this.UseCache == true)
             {
-                if (this.permissionsCache.ContainsKey(userId))
+                if (permissionsCache.ContainsKey(userId))
                 {
-                    userFuncs = this.permissionsCache[userId];
+                    userFuncs = permissionsCache[userId];
                 }
             }
 
@@ -156,7 +156,7 @@ namespace SuperPartner.Permission.Authorization
                 userFuncs = storageProvider.GetFuncsByUser(userId);
                 if (this.UseCache == true && userFuncs != null)
                 {
-                    this.permissionsCache.Add(userId, userFuncs);
+                    permissionsCache.Add(userId, userFuncs);
                 }
             }
 
@@ -174,9 +174,9 @@ namespace SuperPartner.Permission.Authorization
         /// <returns>The functions</returns>
         private Dictionary<string, PermFunc> GetFunctionsByFuncCode()
         {
-            if (this.UseCache && this.funcsCache != null)
+            if (this.UseCache && funcsCache != null)
             {
-                return this.funcsCache;
+                return funcsCache;
             }
 
             var results = new Dictionary<string, PermFunc>();
@@ -190,7 +190,7 @@ namespace SuperPartner.Permission.Authorization
 
                 if (this.UseCache)
                 {
-                    this.funcsCache = results;
+                    funcsCache = results;
                 }
             }
 

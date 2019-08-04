@@ -79,5 +79,10 @@
             </summary>
             <param name="context"></param>
         </member>
+        <member name="F:SuperPartner.Startup.MyLoggerFactory">
+            <summary>
+            Console logger provider.
+            </summary>
+        </member>
     </members>
 </doc>
