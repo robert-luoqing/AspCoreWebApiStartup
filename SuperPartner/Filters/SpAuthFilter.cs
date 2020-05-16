@@ -19,6 +19,10 @@ namespace SuperPartner.Filters
     /// </summary>
     public class SpAuthFilter : IAuthorizationFilter
     {
+        /// <summary>
+        /// On authorization
+        /// </summary>
+        /// <param name="context"></param>
         public void OnAuthorization(AuthorizationFilterContext context)
         {
             var tokenHandler = context.HttpContext.RequestServices.GetService(typeof(ITokenHandler)) as ITokenHandler;
@@ -36,7 +40,7 @@ namespace SuperPartner.Filters
             {
                 var url = context.HttpContext.Request.Path.Value;
                 var authorizationHandler = context.HttpContext.RequestServices.GetService(typeof(IAuthorizationHandler)) as IAuthorizationHandler;
-                var isPassed = authorizationHandler.CheckUrl(bizContext.LoginUser.UserId.ToString(),
+                var isPassed = authorizationHandler.CheckUrl(bizContext.LoginUser != null ? bizContext.LoginUser.UserId.ToString() : null,
                     url,
                     bizContext.Configuration.IgnoreCheckPermissionUrls,
                     bizContext.Configuration.IgnoreCheckPermissionUrlsWhenLogined);
