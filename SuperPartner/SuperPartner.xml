@@ -49,6 +49,12 @@
             It used to verify login or non-login API, and initial token, token's data
             </summary>
         </member>
+        <member name="M:SuperPartner.Filters.SpAuthFilter.OnAuthorization(Microsoft.AspNetCore.Mvc.Filters.AuthorizationFilterContext)">
+            <summary>
+            On authorization
+            </summary>
+            <param name="context"></param>
+        </member>
         <member name="T:SuperPartner.Filters.SpExceptionFilter">
             <summary>
             Author: Robert
@@ -79,10 +85,68 @@
             </summary>
             <param name="context"></param>
         </member>
+        <member name="T:SuperPartner.Program">
+            <summary>
+            entry
+            </summary>
+        </member>
+        <member name="M:SuperPartner.Program.Main(System.String[])">
+            <summary>
+            Main
+            </summary>
+            <param name="args"></param>
+        </member>
+        <member name="M:SuperPartner.Program.CreateHostBuilder(System.String[])">
+            <summary>
+            Create host
+            </summary>
+            <param name="args"></param>
+            <returns></returns>
+        </member>
+        <member name="T:SuperPartner.Startup">
+            <summary>
+            Startup entry
+            </summary>
+        </member>
         <member name="F:SuperPartner.Startup.MyLoggerFactory">
             <summary>
             Console logger provider.
             </summary>
+        </member>
+        <member name="P:SuperPartner.Startup.Configuration">
+            <summary>
+            Configuration
+            </summary>
+        </member>
+        <member name="M:SuperPartner.Startup.#ctor(Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Startup constructor
+            </summary>
+            <param name="configuration">Configuation</param>
+        </member>
+        <member name="M:SuperPartner.Startup.ConfigureServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            This method gets called by the runtime. Use this method to add services to the container.
+            </summary>
+            <param name="services"></param>
+        </member>
+        <member name="M:SuperPartner.Startup.Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Hosting.IWebHostEnvironment)">
+            <summary>
+            This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+            </summary>
+            <param name="app"></param>
+            <param name="env"></param>
+        </member>
+        <member name="T:SuperPartner.SwaggerSetting">
+            <summary>
+            Swageer setting
+            </summary>
+        </member>
+        <member name="M:SuperPartner.SwaggerSetting.Confige(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Config
+            </summary>
+            <param name="services">Services</param>
         </member>
     </members>
 </doc>

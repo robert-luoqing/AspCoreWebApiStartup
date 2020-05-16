@@ -24,25 +24,46 @@ using System.IO;
 using SuperPartner.Permission.DataContext;
 using Microsoft.Extensions.Logging.Console;
 using SuperPartner.Permission.Authorization;
+using Microsoft.Extensions.Hosting;
 
 namespace SuperPartner
 {
+    /// <summary>
+    /// Startup entry
+    /// </summary>
     public class Startup
     {
+
         /// <summary>
         /// Console logger provider.
         /// </summary>
-        public static readonly LoggerFactory MyLoggerFactory
-            = new LoggerFactory(new[] { new ConsoleLoggerProvider((_, __) => true, true) });
+        public static readonly ILoggerFactory MyLoggerFactory
+            = LoggerFactory.Create(builder =>
+            {
+                builder.AddFilter("Microsoft", LogLevel.Warning)
+                       .AddFilter("System", LogLevel.Warning)
+                       .AddFilter("SampleApp.Program", LogLevel.Debug)
+                       .AddConsole();
+            });
 
+        /// <summary>
+        /// Configuration
+        /// </summary>
+        public IConfiguration Configuration { get; }
+
+        /// <summary>
+        /// Startup constructor
+        /// </summary>
+        /// <param name="configuration">Configuation</param>
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
-
-        // This method gets called by the runtime. Use this method to add services to the container.
+        /// <summary>
+        /// This method gets called by the runtime. Use this method to add services to the container.
+        /// </summary>
+        /// <param name="services"></param>
         public void ConfigureServices(IServiceCollection services)
         {
             var appSettings = this.Configuration.GetSection("AppSettings");
@@ -99,18 +120,22 @@ namespace SuperPartner
             // It should be define as singleton
             services.AddSingleton(typeof(IAuthorizationHandler), authorizationHandler);
 
-            services.AddMvc(options =>
+            services.AddControllers(options =>
             {
                 options.Filters.Add(new SpExceptionFilter());
                 options.Filters.Add(new SpAuthFilter());
-            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            });
 
             // swagger configuration
             SwaggerSetting.Confige(services);
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        /// <summary>
+        /// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        /// </summary>
+        /// <param name="app"></param>
+        /// <param name="env"></param>
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             Logger.ConfigurationLog4Net();
             if (env.IsDevelopment())
@@ -133,8 +158,16 @@ namespace SuperPartner
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
             });
 
-            // app.UseHttpsRedirection();
-            app.UseMvc();
+            app.UseHttpsRedirection();
+
+            app.UseRouting();
+
+            //app.UseAuthorization();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
         }
     }
 }
